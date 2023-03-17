@@ -201,7 +201,7 @@ class FlimLabsApi:
         print("[PY-API] Executing flim-reader.exe " + firmware + " " + output_file)
 
         subprocess.run(
-            ["flim-reader.exe", firmware, output_file, str(262144), str(megabytes), "big", "one-shot", "disable-streaming"],
+            ["flim-reader.exe", firmware, output_file, str(MB), str(megabytes), "big", "one-shot", "disable-streaming"],
             shell=True)
 
     def acquire_spectroscopy(self, laser_frequency_mhz: int, acquisition_time_seconds: int):
