@@ -1,5 +1,4 @@
 from flim_labs_api import FlimLabsApi
 
 api = FlimLabsApi()
-api.set_firmware('firmwares\\naio.flim')
-api.acquire_raw_data(32, 100)
+api.acquire_raw_data('firmwares\\photons_tracing_simulator.flim', 'file-test.bin', 32)

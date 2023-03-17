@@ -163,9 +163,9 @@ class FlimLabsApi:
     def set_consumer_handler(self, handler):
         self.consumer_handler = handler
 
-    def acquire_raw_data(self, chunk_size: int, chunks: int):
-        self.acquisition_mode = AcquisitionMode.RAW_DATA
-        self._acquire_from_reader(chunk_size, chunks)
+    # def acquire_raw_data(self, chunk_size: int, chunks: int):
+    #     self.acquisition_mode = AcquisitionMode.RAW_DATA
+    #     self._acquire_from_reader(chunk_size, chunks)
 
     def acquire_measure_frequency(self):
         self.acquisition_mode = AcquisitionMode.MEASURE_FREQUENCY
@@ -196,10 +196,13 @@ class FlimLabsApi:
 
         self._acquire_from_reader(1024, 1024 * 800, channels_str)
 
-    # def acquire_raw_data(self, firmware: str, output_file: str, chunk_size: int, chunks: int):
-    #     self.acquisition_mode = AcquisitionMode.RAW_DATA
-    #     print("[PY-API] Executing flim-reader.exe " + firmware + " " + output_file)
-    #     subprocess.run(["flim-reader.exe", firmware, output_file, str(chunk_size), str(chunks), "big", "disable-streaming"], shell=True)
+    def acquire_raw_data(self, firmware: str, output_file: str, megabytes: int):
+        self.acquisition_mode = AcquisitionMode.RAW_DATA
+        print("[PY-API] Executing flim-reader.exe " + firmware + " " + output_file)
+
+        subprocess.run(
+            ["flim-reader.exe", firmware, output_file, str(262144), str(megabytes), "big", "one-shot", "disable-streaming"],
+            shell=True)
 
     def acquire_spectroscopy(self, laser_frequency_mhz: int, acquisition_time_seconds: int):
         self.acquisition_mode = AcquisitionMode.SPECTROSCOPY
