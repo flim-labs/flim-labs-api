@@ -78,9 +78,9 @@ In the API the class <b>FlimLabsApi</b> is defined to provide an interface to co
 
 ## Examples 
 
-<ol>
 
-  <li><b>Spectroscopy</b></li> 
+
+  1. <b>Spectroscopy</b></li> 
   
   [spectroscopy.py](/examples/spectroscopy.py) is an implementation of flim_labs_api for spectroscopy acquisition mode. You can use *spectroscopy.py* connecting the single photon detector with a SMA connector to channel 1 in the FPGA.
   For a list of channels' map consult [map of channels](/images/image)
@@ -255,7 +255,7 @@ A plot is made with the data stored in the *x_data* and *y_data* arrays and is u
  
  
  
- <li><b>Measure-frequency</b></li>
+ 2. <b>Measure-frequency</b>
 
  [measure-frequency](/examples/measure-frequency.py) is an implementation of flim_labs_api for the measure_frequency acquisition mode. It measures the frequency of the laser pulses from the channel *sync in*.
  
@@ -338,7 +338,7 @@ This is an example of what is obtained to measure a pulsed laser's frequency of 
   
 
 
-<li><b>Photons_tracing</b></li>
+3. <b>Photons_tracing</b>
 
 [photons_tracing](/examples/photons_tracing.py) is an example of using flim_labs_api for acquiring and displaying photons tracing data. You can acquire the data from all the 12 channels of the FPGA in this example.
  
@@ -487,7 +487,7 @@ This is an example of what is obtained using *photons_tracing.py* to check the i
  The data are also saved as binary files for further visualization and processing.
 
 
-<li><b>Raw_data</b></li> 
+4. <b>Raw_data</b> 
 
 [acquire_raw_data](/examples/acquire_raw_data.py)is an example of using flim_labs_api to acquire the data coming from the FPGA without processing and save them as .bin file.
 You just have to flash the firmware for the acquisition mode you're interested in and specify the size in MB of the data you want to acquire.
