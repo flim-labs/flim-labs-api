@@ -82,7 +82,7 @@ In the API the class <b>FlimLabsApi</b> is defined to provide an interface to co
 
   <li><b>Spectroscopy</b></li> 
   
-  [spectroscopy.py](/examples/spectroscopy) is an implementation of flim_labs_api for spectroscopy acquisition mode. You can use *spectroscopy.py* connecting the single photon detector with a SMA connector to channel 1 in the FPGA.
+  [spectroscopy.py](/examples/spectroscopy.py) is an implementation of flim_labs_api for spectroscopy acquisition mode. You can use *spectroscopy.py* connecting the single photon detector with a SMA connector to channel 1 in the FPGA.
   For a list of channels' map consult [map of channels](/images/image)
   
   For immediate reference, *spectroscopy.py* content is reported below:
