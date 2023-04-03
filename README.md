@@ -314,23 +314,27 @@ def receive_measure(self, frequency):
 
 The method *closeEvent* is called when the main window is closed. It stops the acquisition of data from the frequency meter.
 
-```
-def closeEvent(self, event):
-        self.api.stop_acquisition()
-        event.accept()
-```
+	```
+	
+	def closeEvent(self, event):
+			self.api.stop_acquisition()
+			event.accept()
+	
+	```
 
 The method *start_meter* is called when the *start_button* is clicked. This method updates the *measure_label* with a message to indicate that the measurement is waiting, disables the *start_button*, sets the *firmware* for the frequency meter, and starts the acquisition of data.
 
-```
-def start_meter(self):                               
+	```
+	
+	def start_meter(self):                               
         self.measure_label.setText('Waiting for measure...')
         self.measure_label.adjustSize()
         self.start_button.setEnabled(False)
         self.api.set_firmware("firmwares\\frequency_meter.flim")
         self.api.acquire_measure_frequency()
         self.update()
-```
+
+	```
 
 This is an example of what is obtained to measure a pulsed laser's frequency of 80 MHz:
 
