@@ -38,7 +38,7 @@ class MainWindow(QMainWindow):
         self.measure_label.setText('Waiting for measure...')
         self.measure_label.adjustSize()
         self.start_button.setEnabled(False)
-        self.api.set_firmware("firmwares\\frequency_meter_simulator.flim")
+        self.api.set_firmware("firmwares\\frequency_meter.flim")
         self.api.acquire_measure_frequency()
         self.update()
 

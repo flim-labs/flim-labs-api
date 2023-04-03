@@ -11,11 +11,11 @@ MB = 262144
 
 
 class AcquisitionMode:
-    UNSET = 'unset'
-    PHOTONS_TRACING = 'photons-tracing'
-    SPECTROSCOPY = 'spectroscopy'
-    MEASURE_FREQUENCY = 'measure-frequency'
-    RAW_DATA = 'raw-data'
+    UNSET = 'unset'               # valore di default 
+    PHOTONS_TRACING = 'photons-tracing' # tiene conto del numero di fotoni per ogni bin
+    SPECTROSCOPY = 'spectroscopy'            # 
+    MEASURE_FREQUENCY = 'measure-frequency'   #misura la frequenza del laser 
+    RAW_DATA = 'raw-data'                  # salva i dati da fpga
 
 
 class FlimLabsApi:
@@ -118,6 +118,7 @@ class FlimLabsApi:
                                 print("[PY-API] Acquisition time: " + str(
                                     self.acquisition_time_seconds) + " s, macro_time: " + str(macro_time) + " ns")
                                 self.stop_acquisition()
+                                 
                                 break
                             self.consumer_handler(channel, time_bin, micro_time, monotonic_counter, macro_time)
                         case AcquisitionMode.RAW_DATA:
@@ -156,23 +157,23 @@ class FlimLabsApi:
         self.enable_consumer_lock.release()
         print("[PY-API] Acquisition stopped.")
 
-    def set_firmware(self, firmware):
+    def set_firmware(self, firmware):    #firmawre per settare la frequenza a cui vogliamo fare acquisizione
         print("[PY-API] Setting firmware to " + firmware)
         self.firmware = firmware
 
     def set_consumer_handler(self, handler):
         self.consumer_handler = handler
 
-    # def acquire_raw_data(self, chunk_size: int, chunks: int):
-    #     self.acquisition_mode = AcquisitionMode.RAW_DATA
-    #     self._acquire_from_reader(chunk_size, chunks)
+    def acquire_raw_data(self, chunk_size: int, chunks: int):
+        self.acquisition_mode = AcquisitionMode.RAW_DATA
+        self._acquire_from_reader(chunk_size, chunks)
 
     def acquire_measure_frequency(self):
         self.acquisition_mode = AcquisitionMode.MEASURE_FREQUENCY
 
         self._acquire_from_reader(32, 1)
 
-    def acquire_photons_tracing(self, channels: list[int], acquisition_time_seconds: int = 300):
+    def acquire_photons_tracing(self, channels: list[int], acquisition_time_seconds: int = 300):  #channels: canali su fpga abilitati per fare photon tracing
         if channels is None:
             raise Exception("Channel list is None")
         if len(channels) > 12:
@@ -194,15 +195,14 @@ class FlimLabsApi:
             channels_str += str(channel) + ","
         channels_str = channels_str[:-1]
 
-        self._acquire_from_reader(1024, 1024 * 800, channels_str)
+        #self._acquire_from_reader(100 * MB, 10, channels_str)
+        self._acquire_from_reader(1024, 800*1024, channels_str) #avvia questo metodo privato che va a inviare comando al processor
 
-    def acquire_raw_data(self, firmware: str, output_file: str, megabytes: int):
-        self.acquisition_mode = AcquisitionMode.RAW_DATA
-        print("[PY-API] Executing flim-reader.exe " + firmware + " " + output_file)
 
-        subprocess.run(
-            ["flim-reader.exe", firmware, output_file, str(MB), str(megabytes), "big", "one-shot", "disable-streaming"],
-            shell=True)
+    # def acquire_raw_data(self, firmware: str, output_file: str, chunk_size: int, chunks: int):
+    #     self.acquisition_mode = AcquisitionMode.RAW_DATA
+    #     print("[PY-API] Executing flim-reader.exe " + firmware + " " + output_file)
+    #     subprocess.run(["flim-reader.exe", firmware, output_file, str(chunk_size), str(chunks), "big", "disable-streaming"], shell=True)
 
     def acquire_spectroscopy(self, laser_frequency_mhz: int, acquisition_time_seconds: int):
         self.acquisition_mode = AcquisitionMode.SPECTROSCOPY
@@ -215,9 +215,10 @@ class FlimLabsApi:
 
         self.acquisition_time_seconds = acquisition_time_seconds
 
-        self._acquire_from_reader(1024, 1024 * 800, str(laser_frequency_mhz))
-
-    def _acquire_from_reader(self, chunk_size: int, chunks: int, additional_args: str = None):
+        self._acquire_from_reader(1024, 800*1024, str(laser_frequency_mhz))
+        
+    
+    def _acquire_from_reader(self, chunk_size: int, chunks: int, additional_args: str = None):  #chunk size: grandezza chunk. quanti chunk puoi scaricare. additional args: parametri in più passati a flim procesor
         try:
             output_file = "output_" + time.strftime("%Y%m%d-%H%M%S") + ".bin"
             self.enable_receiver_lock.acquire()
@@ -251,4 +252,7 @@ class FlimLabsApi:
         except Exception as e:
             print("[PY-API] Error: " + str(e))
             # print stacktrace
-            traceback.print_exc()
+            traceback.print_exc()          #avvia 2 tread (consumer e receiver) consumer passa dati a utilizzatore api receiver acquisisce i dati da processor 
+            
+            
+            #reader e processor sono due app che si interfacciano tra fpga e api

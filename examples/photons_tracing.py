@@ -36,7 +36,7 @@ class MainWindow(QMainWindow):
 
         self.slice = 1 * SLICE_SECONDS
         self.channels = [1]
-        self.acquisition_time_in_seconds = 10
+        self.acquisition_time_in_seconds = 60
 
         self.data = []
         for _ in self.channels:
@@ -73,7 +73,7 @@ class MainWindow(QMainWindow):
 
     def start_acquisition(self):
         self.start_button.setEnabled(False)
-        self.api.set_firmware("firmwares\\photons_tracing_simulator.flim")
+        self.api.set_firmware("firmwares\\photons_tracing.flim")
         self.api.acquire_photons_tracing(channels=self.channels,
                                          acquisition_time_seconds=self.acquisition_time_in_seconds)
 

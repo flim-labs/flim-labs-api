@@ -24,7 +24,7 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__(*args, **kwargs)
 
         self.laser_mhz = 40
-        self.acquisition_time_in_seconds = 10
+        self.acquisition_time_in_seconds = 28
 
         self.x_data = linspace(0, 1000 / self.laser_mhz, 256)
         self.y_data = np.zeros(256)
@@ -49,6 +49,11 @@ class MainWindow(QMainWindow):
         self.start_button = QPushButton('Start', self)
         self.start_button.move(5, 5)
         self.start_button.clicked.connect(self.start_acquisition)
+        
+        # draw a button to STOP the acquisition
+        self.stop_button = QPushButton('Stop', self)
+        self.stop_button.move(120, 5)
+        self.stop_button.clicked.connect(self.stop_acquisition)
 
         self.mutex = QMutex()
 
@@ -58,6 +63,13 @@ class MainWindow(QMainWindow):
         self.phase_label.setText('Points received: 0')
         self.phase_label.adjustSize()
         self.points_received = 0
+        
+        # create a label to show the time of the acquisition
+        self.time_label = QLabel(self)
+        self.time_label.move(120, 40)
+        self.time_label.setText('Acquisition time: 0')
+        self.time_label.adjustSize()
+        self.counts = 0
 
         self.show()
 
@@ -68,11 +80,21 @@ class MainWindow(QMainWindow):
 
     def start_acquisition(self):
         self.start_button.setEnabled(False)
-        self.api.set_firmware("firmwares\\spectroscopy_simulator_" + str(self.laser_mhz) + "MHz.flim")
+        #self.api.set_firmware("firmwares\\spectroscopy_simulator_" + str(self.laser_mhz) + "MHz.flim")
+        self.api.set_firmware("firmwares\\spectroscopy_40MHz_lvds_ch1.flim")
+        #self.api.set_firmware("firmwares\\spectroscopy_80MHz.flim")
         self.api.acquire_spectroscopy(
             laser_frequency_mhz=self.laser_mhz,
             acquisition_time_seconds=self.acquisition_time_in_seconds
         )
+        self.stop_button.setEnabled(True)
+        
+    def stop_acquisition(self):
+        self.stop_button.setEnabled(False)
+        self.api.stop_acquisition()
+        self.y_data = np.zeros(256)
+        self.start_button.setEnabled(True)
+             
 
     def receive_point(self, channel, time_bin, micro_time, monotonic_counter, macro_time):
         self.mutex.lock()
@@ -90,6 +112,11 @@ class MainWindow(QMainWindow):
         # format points received with commas
         self.phase_label.setText(f'Total photons: {self.points_received:,}')
         self.phase_label.adjustSize()
+        
+        for i in range(self.acquisition_time_in_seconds):
+            self.time_label.setText(f'Acquisition time: {str(i)}')
+        
+        self.time_label.adjustSize()
 
 
 if __name__ == '__main__':
