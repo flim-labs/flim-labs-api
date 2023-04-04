@@ -79,41 +79,44 @@ In the API the class <b>FlimLabsApi</b> is defined to provide an interface to co
 ## Examples 
 
 
-
-  1. <b>Spectroscopy</b></li> 
+1. <b>Spectroscopy</b></li> 
   
-  [spectroscopy.py](/examples/spectroscopy.py) is an implementation of flim_labs_api for spectroscopy acquisition mode. You can use *spectroscopy.py* connecting the single photon detector with a SMA connector to channel 1 in the FPGA.
-  For a list of channels' map consult [map of channels](/images/image)
+[spectroscopy.py](/examples/spectroscopy.py) is an implementation of flim_labs_api for spectroscopy acquisition mode. You can use *spectroscopy.py* connecting the single photon detector with a SMA connector to channel 1 in the FPGA.
+For a list of channels' map consult [map of channels](/images/image)
   
-  For immediate reference, *spectroscopy.py* content is reported below:
+For immediate reference, *spectroscopy.py* content is reported below:
  
 ##### Needed libraries
   
-  ```
+```
+
   import matplotlib
-from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
-from matplotlib.figure import Figure
-from numpy import linspace
+  from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
+  from matplotlib.figure import Figure
+  from numpy import linspace
 
-matplotlib.use('Qt5Agg')
+  matplotlib.use('Qt5Agg')
 
-import numpy as np
-from PyQt5.QtCore import QTimer, QMutex
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel
+  import numpy as np
+  from PyQt5.QtCore import QTimer, QMutex
+  from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel
 
-from flim_labs_api import FlimLabsApi
+  from flim_labs_api import FlimLabsApi
+  
 ```
 
 ##### Define the MplCanvas class
 
 This class creates the object *Figure* with the specified width, height, and dpi values that will be used for plotting the data.
 
-  ```
-  class MplCanvas(FigureCanvasQTAgg):
+```
+
+class MplCanvas(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
         fig = Figure(figsize=(width, height), dpi=dpi)
         self.axes = fig.add_subplot(111)
         super(MplCanvas, self).__init__(fig)
+		
 ```
 
 ##### Define the MainWindow class
@@ -124,7 +127,8 @@ On the x axis the laser period (in nanoseconds) is decomposed in 256 bins. On th
 
 Also the laser frequency and the acquisition time of the experiment are set. The GUI window is completed with a start and stop button used to control the start and stop of the acquisition, a label to show the current number of photons received and a timer to refresh the plot every 100 ms.
 
-   ```
+```
+
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
@@ -171,25 +175,29 @@ class MainWindow(QMainWindow):
         self.points_received = 0
         
         self.show()        
-  ```
+		
+```
   
-  ##### Methods
+##### Methods
   
-  in the same class the method *closeEvent* is defined to save as npz file the data acquired after we stop the acquisition:
+In the same class the method *closeEvent* is defined to save as npz file the data acquired after we stop the acquisition:
   
-  ```
-  def closeEvent(self, event):
+```
+
+def closeEvent(self, event):
         np.savez_compressed('spectroscopy', self.x_data, self.y_data)
         self.api.stop_acquisition()
         event.accept()
-  ```
+		
+```
   
-  The *start_acquisition* method starts when pressing the start button and it is flashed the firmware for spectroscopy acquisition mode on the FPGA.
+The *start_acquisition* method starts when pressing the start button and it is flashed the firmware for spectroscopy acquisition mode on the FPGA.
   
-  The *stop_acquisition* method starts when pressing the stop button to stop the acquisition of data from the FPGA. After the stop button is pressed the data in the histogram are reset, and also the number of received point is reset to zero, so that you can restart the acquisition by pressing again the start button. 
+The *stop_acquisition* method starts when pressing the stop button to stop the acquisition of data from the FPGA. After the stop button is pressed the data in the histogram are reset, and also the number of received point is reset to zero, so that you can restart the acquisition by pressing again the start button. 
   
   
-  ```
+```
+
 def start_acquisition(self):
         self.start_button.setEnabled(False)
         #self.api.set_firmware("firmwares\\spectroscopy_simulator_" + str(self.laser_mhz) + "MHz.flim")
@@ -208,34 +216,36 @@ def start_acquisition(self):
 		self.points_received = 0
         self.start_button.setEnabled(True)
              
-  ```
+```
   
-  The *receive_point* method takes in input the following parameters:
+The *receive_point* method takes in input the following parameters:
   
-  * <b>channel</b>: channel from which the data are acquired 
-  * <b>time_bin</b>: digital bin within the laser period. As the laser period was decomposed in 256 bins, time_bin can be any integer value from 0 to 255 
-  * <b>micro_time</b>: variable representing the time bin in nanoseconds
-  * <b>monotonic_counter</b>: digital value accounting for the time passed from the beginning of the acquisition 
-  * <b>macro_time</b>: variable expressed in nanoseconds representing the time passed from the beginning of the acquisition
+* <b>channel</b>: channel from which the data are acquired 
+* <b>time_bin</b>: digital bin within the laser period. As the laser period was decomposed in 256 bins, time_bin can be any integer value from 0 to 255 
+* <b>micro_time</b>: variable representing the time bin in nanoseconds
+* <b>monotonic_counter</b>: digital value accounting for the time passed from the beginning of the acquisition 
+* <b>macro_time</b>: variable expressed in nanoseconds representing the time passed from the beginning of the acquisition
   
-  ![input parameters](/images/microtime_macrotime.jpg "parameters")
+![input parameters](/images/microtime_macrotime.jpg "parameters")
   
  
- the *y_data* array is updated at the *time_bin* index by incrementing its value by 1. Also the number of points received is incremented by 1 for each photon received.
+The *y_data* array is updated at the *time_bin* index by incrementing its value by 1. Also the number of points received is incremented by 1 for each photon received.
  
-  ```
- def receive_point(self, channel, time_bin, micro_time, monotonic_counter, macro_time):    
+```
+
+def receive_point(self, channel, time_bin, micro_time, monotonic_counter, macro_time):    
         self.mutex.lock()
         self.y_data[time_bin] += 1
         self.points_received += 1
         self.mutex.unlock()
             
-  ```
+```
  
 A plot is made with the data stored in the *x_data* and *y_data* arrays and is updated with new data every 100 milliseconds by connecting the timeout signal of the timer to the *refresh_histogram* method:
  
- ```
-  def refresh_histogram(self):
+```
+
+def refresh_histogram(self):
         self.chart.axes.clear() 
         self.chart.axes.plot(self.x_data, self.y_data) 
         self.chart.axes.set_xlabel('Time (ns)') 
@@ -245,28 +255,31 @@ A plot is made with the data stored in the *x_data* and *y_data* arrays and is u
         # format points received with commas
         self.phase_label.setText(f'Total photons: {self.points_received:,}') 
         self.phase_label.adjustSize() 
- ```
+		
+```
  
- This is an example of what is obtained using *spectroscopy.py* to reconstruct the fluorescence lifetime decay curve of a coumarin sample (1,5 micrograms/ml):
+This is an example of what is obtained using *spectroscopy.py* to reconstruct the fluorescence lifetime decay curve of a coumarin sample (1,5 micrograms/ml):
  
- ![Fluorescence lifetime decay curve of a coumarin sample](/images/spectroscopy.png "Spectroscopy on a coumarin sample")
+![Fluorescence lifetime decay curve of a coumarin sample](/images/spectroscopy.png "Spectroscopy on a coumarin sample")
  
- The data are also saved as binary files for further visualization and processing
+The data are also saved as binary files for further visualization and processing
  
  
  
- 2. <b>Measure-frequency</b>
+2. <b>Measure-frequency</b>
 
- [measure-frequency](/examples/measure-frequency.py) is an implementation of flim_labs_api for the measure_frequency acquisition mode. It measures the frequency of the laser pulses from the channel *sync in*.
+[measure-frequency](/examples/measure-frequency.py) is an implementation of flim_labs_api for the measure_frequency acquisition mode. It measures the frequency of the laser pulses from the channel *sync in*.
  
- The content of *measure-frequency* is reported below for immediate reference:
+The content of *measure-frequency* is reported below for immediate reference:
  
- ##### Needed libraries
+##### Needed libraries
  
- ```
- from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel
+```
+
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel
 
 from flim_labs_api import FlimLabsApi
+
 
 ```
 
@@ -274,8 +287,7 @@ from flim_labs_api import FlimLabsApi
 
 The main GUI window is defined by setting its size, position and title. The interface is completed with a start button to start the acquisition and a label showing the measured frequency of the laser pulses.
 
- ```
-
+```
 
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
@@ -296,13 +308,15 @@ class MainWindow(QMainWindow):
         self.measure_label.adjustSize()
 
         self.show()
- ```
+		
+```
 
 ##### Methods
 
 The method *receive_measure* is called when a measurement is received from the frequency meter through the *FlimLabsApi* object. This method updates the *measure_label* with the measurement result and enables the *start_button*
 
 ```
+
 def receive_measure(self, frequency):                 
         self.measure_label.setText('Measurement: ' + str(frequency) + ' MHz')
         self.measure_label.adjustSize()
@@ -314,19 +328,19 @@ def receive_measure(self, frequency):
 
 The method *closeEvent* is called when the main window is closed. It stops the acquisition of data from the frequency meter.
 
-	```
+```
 	
-	def closeEvent(self, event):
+def closeEvent(self, event):
 			self.api.stop_acquisition()
 			event.accept()
 	
-	```
+```
 
 The method *start_meter* is called when the *start_button* is clicked. This method updates the *measure_label* with a message to indicate that the measurement is waiting, disables the *start_button*, sets the *firmware* for the frequency meter, and starts the acquisition of data.
 
-	```
+```
 	
-	def start_meter(self):                               
+def start_meter(self):                               
         self.measure_label.setText('Waiting for measure...')
         self.measure_label.adjustSize()
         self.start_button.setEnabled(False)
@@ -334,7 +348,7 @@ The method *start_meter* is called when the *start_button* is clicked. This meth
         self.api.acquire_measure_frequency()
         self.update()
 
-	```
+```
 
 This is an example of what is obtained to measure a pulsed laser's frequency of 80 MHz:
 
@@ -351,6 +365,7 @@ The content of *photons_tracing* is reported below for immediate reference:
 ##### Needed libraries
 
 ```
+
 import matplotlib
 import numpy as np
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
@@ -363,18 +378,21 @@ from PyQt5.QtCore import QTimer, QMutex
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel
 
 from flim_labs_api import FlimLabsApi
+
 ```
 
 ##### Define the MplCanvas class
 
 This class creates the object *Figure* with the specified width, height, and dpi values that will be used for plotting the data.
 
-  ```
-  class MplCanvas(FigureCanvasQTAgg):
+```
+
+class MplCanvas(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
         fig = Figure(figsize=(width, height), dpi=dpi)
         self.axes = fig.add_subplot(111)
         super(MplCanvas, self).__init__(fig)
+		
 ```
 
 ##### Define the MainWindow class
@@ -383,6 +401,7 @@ The MainWindow class initializes the GUI window, sets up the acquisition time an
 The start button triggers an acquisition of photon tracing data by calling the method *acquire_photons_tracing* from the *flim_labs_api* library
 
 ```
+
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
@@ -427,6 +446,7 @@ class MainWindow(QMainWindow):
         
 
         self.show()
+		
 ```
 
 ##### Methods
@@ -439,12 +459,14 @@ The *closeEvent* method is called when the user closes the application. It stops
         self.api.stop_acquisition()
         np.savez_compressed('photons_tracing', data=self.data)
         event.accept()
+		
 ```
 
 The *receive_data* method takes in input the parameter *row_data* , which is a list containing the photon counts for each channel in a particular time bin, and then appends the corresponding photon count to the channel's data.
 The variable *self.rows_received* is then incremented to keep track of the number of rows of data received.
 
 ```
+
 def receive_data(self, row_data):
         self.mutex.lock()
         for i, channel in enumerate(self.channels):
@@ -452,6 +474,7 @@ def receive_data(self, row_data):
             self.data[i].append(row_data[i])
         self.rows_received += 1
         self.mutex.unlock()
+		
 ```
 
 The *refresh_histogram* method is called every 1 millisecond by a QTimer instance to update the histogram with new data.
@@ -486,9 +509,9 @@ def refresh_histogram(self):
 
 This is an example of what is obtained using *photons_tracing.py* to check the intensity of fluorescence photons in 100 microseconds time bins for a coumarin sample (1,5 micrograms/ml):
  
- ![Fluorescence photons' intensity for 100 microseconds bins](/images/photons_tracing.png "Photons tracing")
+![Fluorescence photons' intensity for 100 microseconds bins](/images/photons_tracing.png "Photons tracing")
  
- The data are also saved as binary files for further visualization and processing.
+The data are also saved as binary files for further visualization and processing.
 
 
 4. <b>Raw_data</b> 
