@@ -7,7 +7,11 @@ Overall, this API sets up a communication system between Python and a FLIM data 
 
 The complete FLIM kit developed by FLIM LABS for performing Fluorescence Lifetime Spectroscopy and Imaging looks like this:
 
+<p align="center">
+
 <img src="images/kit.jpg" width="150" height="150">
+
+<p align="center">
 
 1. Fiber-coupled picosecond pulsed laser module
 
@@ -19,7 +23,11 @@ The complete FLIM kit developed by FLIM LABS for performing Fluorescence Lifetim
 
 The channels' map of the data acquisition card are the following: 
 
-![Map of channels](/images/image.png = 250x250)
+<p align="center">
+
+<img src="images/image.jpg" width="150" height="150">
+
+<p align="center">
 
 For more informations on the single products you can check [FLIM LABS](https://www.flimlabs.com/) website.
 
