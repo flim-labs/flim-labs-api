@@ -20,7 +20,7 @@ The complete FLIM kit developed by FLIM LABS for performing Fluorescence Lifetim
 
 The channels' map of the data acquisition card are the following: 
 
-![Map of channels](/images/image.png "Channels map")
+![Map of channels](/images/image_1.png "Channels map")
 
 For more informations on the single products you can check [FLIM LABS](https://www.flimlabs.com/) website.
 
@@ -227,7 +227,7 @@ The *receive_point* method takes in input the following parameters:
 * <b>monotonic_counter</b>: digital value accounting for the time passed from the beginning of the acquisition 
 * <b>macro_time</b>: variable expressed in nanoseconds representing the time passed from the beginning of the acquisition
   
-![input parameters](/images/microtime_macrotime.jpg "parameters")
+![input parameters](/images/mic_mac.jpg "parameters")
   
  
 The *y_data* array is updated at the *time_bin* index by incrementing its value by 1. Also the number of points received is incremented by 1 for each photon received.
@@ -261,7 +261,7 @@ def refresh_histogram(self):
  
 This is an example of what is obtained using *spectroscopy.py* to reconstruct the fluorescence lifetime decay curve of a coumarin sample (1,5 micrograms/ml):
  
-![Fluorescence lifetime decay curve of a coumarin sample](/images/spectroscopy.png "Spectroscopy on a coumarin sample")
+![Fluorescence lifetime decay curve of a coumarin sample](/images/spectroscopy_1.png "Spectroscopy on a coumarin sample")
  
 The data are also saved as binary files for further visualization and processing
  
@@ -280,7 +280,6 @@ The content of *measure-frequency* is reported below for immediate reference:
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel
 
 from flim_labs_api import FlimLabsApi
-
 
 ```
 
@@ -353,7 +352,7 @@ def start_meter(self):
 
 This is an example of what is obtained to measure a pulsed laser's frequency of 80 MHz:
 
-![80 MHz laser's frequency measurement](/images/measure-frequency.png "Frequency meter")
+![80 MHz laser's frequency measurement](/images/frequency-meter_1.png "Frequency meter")
   
 
 
@@ -510,7 +509,7 @@ def refresh_histogram(self):
 
 This is an example of what is obtained using *photons_tracing.py* to check the intensity of fluorescence photons in 100 microseconds time bins for a coumarin sample (1,5 micrograms/ml):
  
-![Fluorescence photons' intensity for 100 microseconds bins](/images/photons_tracing.png "Photons tracing")
+![Fluorescence photons' intensity for 100 microseconds bins](/images/photons_tracing_1.png "Photons tracing")
  
 The data are also saved as binary files for further visualization and processing.
 
