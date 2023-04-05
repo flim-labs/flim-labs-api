@@ -7,7 +7,7 @@ Overall, this API sets up a communication system between Python and a FLIM data 
 
 The complete FLIM kit developed by FLIM LABS for performing Fluorescence Lifetime Spectroscopy and Imaging looks like this:
 
-![Flim kit](/images/kit.jpg = 250x250)
+<img src="kit.jpg" alt="FLIM kit" width="200"/>
 
 1. Fiber-coupled picosecond pulsed laser module
 
