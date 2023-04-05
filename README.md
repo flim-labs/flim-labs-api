@@ -227,7 +227,7 @@ The *receive_point* method takes in input the following parameters:
 * <b>monotonic_counter</b>: digital value accounting for the time passed from the beginning of the acquisition 
 * <b>macro_time</b>: variable expressed in nanoseconds representing the time passed from the beginning of the acquisition
   
-![input parameters](/images/mic_mac.jpg "parameters")
+![input parameters](/images/mic-mac.jpg "parameters")
   
  
 The *y_data* array is updated at the *time_bin* index by incrementing its value by 1. Also the number of points received is incremented by 1 for each photon received.
