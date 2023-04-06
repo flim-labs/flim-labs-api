@@ -58,8 +58,6 @@ You can find a list of available firmwares in the folder [firmwares](/firmwares)
 
 ## How to use it
 
-It is possible to find some [examples](/examples) here showing how to use flim_labs_api in all the acquisition modes.
-
 In the API the class <b>FlimLabsApi</b> is defined to provide an interface to control and communicate with a FPGA device. The class has several methods, including:
 
 * <b>receiver_task</b> is a method that runs in the receiver_thread and receives messages from a ZeroMQ socket connection. The received messages are then parsed based on the acquisition mode and added to a queue for processing. This method has no input parameters.
@@ -74,6 +72,8 @@ In the API the class <b>FlimLabsApi</b> is defined to provide an interface to co
 
 
 ## Examples 
+
+It is possible to find some examples here showing how to use flim_labs_api in all the acquisition modes.
 
 1. <b>Spectroscopy</b></li> 
   
