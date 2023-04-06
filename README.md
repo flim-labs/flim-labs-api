@@ -18,10 +18,6 @@ The complete FLIM kit developed by FLIM LABS for performing Fluorescence Lifetim
 4. FLIM studio software
 
 
-The channels' map of the data acquisition card are the following: 
-
-![Map of channels](/images/image_1.png "Channels map")
-
 For more informations on the single products you can check [FLIM LABS](https://www.flimlabs.com/) website.
 
 ## How to get it 
@@ -49,7 +45,7 @@ In the API five different acquisition modes are specified:
 | <b>Unset</b> | This is the default value of acquisition mode |
 | <b>Photons_tracing</b> | Acquires the number of fluorescence photons in 100 microseconds time bins |
 | <b>Spectroscopy</b> | Acquires the number of fluorescence photons in 50-100 picoseconds time bins (depending on the pulsed laser's frequency) and reconstruct the fluorescence lifetime decay curve |
-| <b>Measure_frequency</b> | Acquires the frequency of the laser's pulses with a precision of hundreds of Hz for repetition rates of tens of MHz|
+| <b>Measure_frequency</b> | Acquires the frequency of the laser's pulses with a precision of tens/hundreds of Hz for repetition rates of tens of MHz|
 | <b>Raw_data</b> | Acquires and saves the data coming from the FPGA as binary files without processing |
 
 
@@ -81,47 +77,43 @@ In the API the class <b>FlimLabsApi</b> is defined to provide an interface to co
 
 1. <b>Spectroscopy</b></li> 
   
-[spectroscopy.py](/examples/spectroscopy.py) is an implementation of *flim_labs_api* for spectroscopy acquisition mode. You can use *spectroscopy.py* connecting the single photon detector with a SMA connector to channel 1 in the FPGA.
+[spectroscopy.py](/examples/spectroscopy.py) is an implementation of *flim_labs_api* for spectroscopy acquisition mode. You can use *spectroscopy.py* connecting with a SMA connector the single photon detector to channel 1 of the data acquisition card.
 
-For a list of channels' map check [map of channels](/images/image).
-
-With *spectroscopy.py* the laser period is divided in 256 time bins, and the single fluorescence photon events falling in each bin, recorded by a detector and time-tagged with tens/hundreds of picoseconds precision by the FPGA device, are counted and passed to a 2D histogram to reconstruct the profile of the fluorescence lifetime decay curve.
+With *spectroscopy.py* the laser period is divided in 256 time bins, and the single fluorescence photon events falling in each bin, recorded by a detector and time-tagged with tens/hundreds of picoseconds precision by the data acquisition card, are counted and passed to a 2D histogram to reconstruct the profile of the fluorescence lifetime decay curve.
 
 For instance, if the pulsed laser is set with a repetition frequency of 80 MHz, that corresponds to a laser period of 12.5 nanoseconds, then time bins of 0.048 nanoseconds (48 picoseconds) are created and the number of photons falling in each 48 picoseconds time bin will be passed to the histogram.
   
 For immediate reference, the code for *spectroscopy* use of the API  is reported and commented in the folder [Spectroscopy](/Spectroscopy).
- 
-
- 
+  
 This is an example of what is obtained using *spectroscopy.py* to reconstruct the fluorescence lifetime decay curve of a coumarin sample (1,5 micrograms/ml):
  
 ![Fluorescence lifetime decay curve of a coumarin sample](/images/spectroscopy_1.png "Spectroscopy on a coumarin sample")
  
-The data are also saved as binary files for further visualization and processing
+The data are also saved as binary files for further visualization and processing.
  
- 
- 
+  
 2. <b>Measure-frequency</b>
 
 [measure-frequency](/examples/measure-frequency.py) is an implementation of flim_labs_api for the measure_frequency acquisition mode. It measures the frequency of the laser pulses from the channel *sync in* of the FPGA.
+
+Using *measure-frequency.py* code it is possible to achieve a precision of tens/hundreds of Hz for laser's frequencies of tens of MHz. 
  
 The code for the *measure-frequency* use of the API, for immediate reference, is reported and commented in the folder [Measure frequency](/Measure_frequency).
  
-
-
 This is an example of what is obtained to measure a pulsed laser's frequency of 80 MHz:
 
 ![80 MHz laser's frequency measurement](/images/frequency-meter_1.png "Frequency meter")
   
 
-
 3. <b>Photons_tracing</b>
 
 [photons_tracing](/examples/photons_tracing.py) is an example of using flim_labs_api for acquiring and displaying photons tracing data. You can acquire the data from all the 12 channels of the FPGA in this example.
  
-The code for the *photons_tracing* use of the API is reported and commented in the folder [Photons_tracing](/Photons_tracing) for immediate reference.
- 
+The channels' map of the data acquisition card for the *photons_tracing* acquisition mode is the following: 
 
+![Map of channels](/images/image_1.png "Channels map")
+
+The code for the *photons_tracing* use of the API is reported and commented in the folder [Photons_tracing](/Photons_tracing) for immediate reference.
 
 This is an example of what is obtained using *photons_tracing.py* to check the intensity of fluorescence photons in 100 microseconds time bins for a coumarin sample (1,5 micrograms/ml):
  
