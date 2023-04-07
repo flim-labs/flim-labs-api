@@ -1,3 +1,5 @@
+# Acquire raw data
+
 Here you can find the commented code used in [acquire_raw_data](/Acquire_raw_data/acquire_raw_data.py) example:
 
 Import the *FlimLabsApi* class and the *generate_unique_filename* method from *flim_labs_api*. 

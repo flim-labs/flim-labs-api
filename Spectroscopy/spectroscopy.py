@@ -75,7 +75,7 @@ class MainWindow(QMainWindow):
     def start_acquisition(self):
         self.start_button.setEnabled(False)
         #self.api.set_firmware("firmwares\\spectroscopy_simulator_" + str(self.laser_mhz) + "MHz.flim")
-        self.api.set_firmware("firmwares\\spectroscopy_" + str(self.laser_mhz) + "MHz_lvds_ch1.flim")
+        self.api.set_firmware("firmwares\\spectroscopy_" + str(self.laser_mhz) + "MHz.flim")
         self.api.acquire_spectroscopy(
             laser_frequency_mhz=self.laser_mhz,
             acquisition_time_seconds=self.acquisition_time_in_seconds
