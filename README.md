@@ -87,7 +87,7 @@ For immediate reference, the code for *spectroscopy* use of the API  is reported
   
 This is an example of what is obtained using *spectroscopy.py* to reconstruct the fluorescence lifetime decay curve of a coumarin sample (1,5 micrograms/ml):
  
-<img src="/images/spectroscopy_1.png" style="width:500px;height:242px;">
+![Fluorescence lifetime decay curve](/images/spectroscopy_1.png "Spectroscopy")
  
 The data are also saved as binary files for further visualization and processing.
  
@@ -130,7 +130,7 @@ The code for the *photons_tracing* use of the API is reported and commented in t
 
 This is an example of what is obtained using *photons_tracing.py* to check the intensity of fluorescence photons in 100 microseconds time bins for a coumarin sample (1,5 micrograms/ml):
  
-<img src="/images/photons_tracing_1.png" style="width:500px;height:227px;">
+![Fluorescence intensity](/images/photons_tracing_1.png "Photons_tracing")
  
 The data are also saved as binary files for further visualization and processing.
 

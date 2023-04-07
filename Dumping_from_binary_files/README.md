@@ -82,4 +82,4 @@ plt.show()
 
 ```
 
-<img src="/images/histogram_dump.png" style="width:720px;height:381px;">
+![Dumping microtime from binary file](/images/histogram_dump.png "Microtime histogram")
