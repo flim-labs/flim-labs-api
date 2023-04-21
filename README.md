@@ -18,9 +18,14 @@ The complete FLIM kit developed by FLIM LABS for performing Fluorescence Lifetim
 4. FLIM studio software
 
 
-For more informations on the single products of the kit you can check [FLIM LABS](https://www.flimlabs.com/) website.
+This repository is thought to be used by FLIM LABS customers. For more informations on the single products of the kit you can check [FLIM LABS](https://www.flimlabs.com/) website.
 
-## How to get it 
+## How to get drivers 
+
+For getting the *drivers* allowing the communication with the data acquisition card email us at info@flimlabs.com. 
+
+
+## How to get the API
 
 You can install flim_labs_api and the requested dependencies with the following *pip* command:
 
@@ -28,12 +33,6 @@ You can install flim_labs_api and the requested dependencies with the following 
 pip install flim_labs_api
 
 ```
-
-## How to install drivers 
-
-The drivers allowing the communication with the FPGA are pre-installed in your computer when running the *pip command* above.
-
-If you want to manually install the drivers you can find them inside the [FPGA_drivers](/FPGA_drivers) folder of this repo. The drivers' installers are put in two sub-folders containing the installers for x86 and x64 architectures respectively.
 
 
 ## Main features 
