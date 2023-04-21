@@ -30,7 +30,7 @@ For getting the *drivers* allowing the communication with the data acquisition c
 You can install flim_labs_api and the requested dependencies with the following *pip* command:
 
 ```
-pip install flim_labs_api
+pip install flim-labs-api
 
 ```
 
