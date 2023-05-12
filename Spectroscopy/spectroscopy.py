@@ -7,7 +7,7 @@ matplotlib.use('Qt5Agg')
 
 import numpy as np
 from PyQt5.QtCore import QTimer, QMutex
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QSpinBox, QFileDialog, QSplitter, QWidget, QVBoxLayout, QHBoxLayout
 
 from flim_labs_api import FlimLabsApi
 
@@ -23,9 +23,10 @@ class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
 
-        self.laser_mhz = 40
-        self.acquisition_time_in_seconds = 20
+        self.laser_mhz = 80
+        self.acquisition_time_in_seconds = 10
         self.output_filename = 'spectroscopy.bin'
+        self.output_filename_1 = 'spectroscopy.csv'
 
         self.x_data = linspace(0, 1000 / self.laser_mhz, 256)
         self.y_data = np.zeros(256)
@@ -55,6 +56,8 @@ class MainWindow(QMainWindow):
         self.stop_button = QPushButton('Stop', self)
         self.stop_button.move(120, 5)
         self.stop_button.clicked.connect(self.stop_acquisition)
+        
+        
 
         self.mutex = QMutex()
 
@@ -64,14 +67,46 @@ class MainWindow(QMainWindow):
         self.phase_label.setText('Points received: 0')
         self.phase_label.adjustSize()
         self.points_received = 0
+                
+        
+        # create a label and spin box for acquisition time setting
+        self.time_label = QLabel('Acquisition Time (Seconds):', self)
+        self.time_label.move(375, 5)
+        self.time_label.adjustSize()
 
+        self.time_spinbox = QSpinBox(self)
+        self.time_spinbox.move(550, 5)
+        self.time_spinbox.setMinimum(1)
+        self.time_spinbox.setMaximum(300)
+        self.time_spinbox.setValue(self.acquisition_time_in_seconds)
+        self.time_spinbox.valueChanged.connect(self.set_acquisition_time)
+        
+        # create a label and spin box for laser frequency setting 
+        self.time_label = QLabel('Laser frequency(MHz):', self)
+        self.time_label.move(725, 5)
+        self.time_label.adjustSize()
+
+        self.time_spinbox = QSpinBox(self)
+        self.time_spinbox.move(900, 5)
+        self.time_spinbox.setMinimum(20)
+        self.time_spinbox.setMaximum(80)
+        self.time_spinbox.setValue(self.laser_mhz)
+        self.time_spinbox.valueChanged.connect(self.set_laser_frequency)
+        
         self.show()
 
     def closeEvent(self, event):
         np.savez_compressed('spectroscopy', self.x_data, self.y_data)
+        np.savetxt(self.output_filename_1, np.column_stack((self.x_data, self.y_data)), delimiter=',')
         self.api.stop_acquisition()
         event.accept()
 
+    def set_acquisition_time(self, value):
+        self.acquisition_time_in_seconds = value    
+    
+    def set_laser_frequency(self, value):
+        self.laser_mhz = value  
+    
     def start_acquisition(self):
         self.start_button.setEnabled(False)
         #self.api.set_firmware("firmwares\\spectroscopy_simulator_" + str(self.laser_mhz) + "MHz.flim")
@@ -88,7 +123,8 @@ class MainWindow(QMainWindow):
         self.y_data = np.zeros(256)
         self.points_received = 0
         self.start_button.setEnabled(True)
-
+        #self.stop_button.setEnabled(True)#provalo con il setup collegato
+        
     def receive_point(self, channel, time_bin, micro_time, monotonic_counter, macro_time):
         self.mutex.lock()
         self.y_data[time_bin] += 1

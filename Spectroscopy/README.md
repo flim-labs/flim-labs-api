@@ -106,6 +106,18 @@ def closeEvent(self, event):
         event.accept()
 		
 ```
+
+Methods *set_acquisition_time* and *set_laser_frequency* are used to set the value of the acquisition time of the experiment and the laser frequency from the GUI:
+
+```
+
+def set_acquisition_time(self, value):
+        self.acquisition_time_in_seconds = value    
+    
+def set_laser_frequency(self, value):
+        self.laser_mhz = value
+		
+```
   
 The *start_acquisition* method starts when pressing the start button and it is flashed the firmware for spectroscopy acquisition mode on the FPGA.
   
@@ -173,3 +185,7 @@ def refresh_histogram(self):
         self.phase_label.adjustSize() 
 		
 ```
+
+
+In the file [Spectroscopy_post_processing.ipynb](/Spectroscopy/Spectroscopy_post_processing.ipynb) contained in this folder you can find some examples of how to process spectroscopy data saved from the experiment to extract additional informations and parameters.
+ 
