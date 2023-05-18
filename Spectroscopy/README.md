@@ -53,12 +53,11 @@ class MainWindow(QMainWindow):
         self.laser_mhz = 40
         self.acquisition_time_in_seconds = 28
 
-        self.x_data = linspace(0, 1000 / self.laser_mhz, 256)
+        self.x_data = np.zeros(256)
         self.y_data = np.zeros(256)
 
         self.setGeometry(512, 512, 1024, 1024)
-        self.setWindowTitle('Spectroscopy ' + str(self.laser_mhz) + ' MHz')
-
+        
         self.api = FlimLabsApi()
         self.api.set_consumer_handler(self.receive_point)
 
@@ -117,6 +116,8 @@ def set_acquisition_time(self, value):
     
 def set_laser_frequency(self, value):
         self.laser_mhz = value
+		self.x_data = linspace(0, 1000 / self.laser_mhz, 256)
+        self.setWindowTitle('Spectroscopy ' + str(self.laser_mhz) + ' MHz')
 		
 ```
   

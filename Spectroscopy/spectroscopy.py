@@ -28,11 +28,11 @@ class MainWindow(QMainWindow):
         self.output_filename = 'spectroscopy.bin'
         self.output_filename_1 = 'spectroscopy.csv'
 
-        self.x_data = linspace(0, 1000 / self.laser_mhz, 256)
+        self.x_data = np.zeros(256)
         self.y_data = np.zeros(256)
 
         self.setGeometry(512, 512, 1024, 1024)
-        self.setWindowTitle('Spectroscopy ' + str(self.laser_mhz) + ' MHz')
+        
 
         self.api = FlimLabsApi()
         self.api.set_consumer_handler(self.receive_point)
@@ -106,6 +106,8 @@ class MainWindow(QMainWindow):
     
     def set_laser_frequency(self, value):
         self.laser_mhz = value  
+        self.x_data = linspace(0, 1000 / self.laser_mhz, 256)
+        self.setWindowTitle('Spectroscopy ' + str(self.laser_mhz) + ' MHz')
     
     def start_acquisition(self):
         self.start_button.setEnabled(False)
