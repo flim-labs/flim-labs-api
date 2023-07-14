@@ -4,9 +4,9 @@
 
 Before you begin, ensure that your system meets the following prerequisites:
 
-    - Operating System: Windows, macOS, or Linux
-    - Internet connection for downloading the Python installer (if not already downloaded)
-    - Sufficient disk space for the installation
+- Operating System: Windows, macOS, or Linux
+- Internet connection for downloading the Python installer (if not already downloaded)
+- Sufficient disk space for the installation
 
 ## Check your Python version
 
