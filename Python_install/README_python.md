@@ -39,7 +39,7 @@ Follow the steps below to install Python 3.10.0 on your system:
 		
 2.  Run the Installer:
 
-- Windows:
+- <b> Windows </b>:
 		
 - Locate the downloaded installer (e.g., python-3.10.0-amd64.exe).
 		 
@@ -47,7 +47,7 @@ Follow the steps below to install Python 3.10.0 on your system:
 		 
 - On the first installer page, ensure the option "Add Python 3.10 to PATH" is selected, as shown in figure:
 		 
-![Python_setup](/images/Python_setup.png "Add Python to PATH")
+![Python_setup](/images/Python_setup_1.png "Add Python to PATH")
 		 
 - Click "Customize installation" if you want to modify the installation settings, or click "Install Now" to proceed with the default settings.
 		 
@@ -55,7 +55,7 @@ Follow the steps below to install Python 3.10.0 on your system:
 		 
 - Once the installation is complete, you can close the installer.
 
-- macOS:
+- <b> macOS </b>:
 		
 - Locate the downloaded installer (e.g., python-3.10.0-macosx10.9.pkg).
 		 
@@ -65,7 +65,7 @@ Follow the steps below to install Python 3.10.0 on your system:
 		 
 - Once the installation is complete, you can close the installer.
 
-- Linux:
+- <b> Linux </b>:
 		
 - Open a terminal.
 		 
