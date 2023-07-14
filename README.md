@@ -25,6 +25,11 @@ This repository is thought to be used by FLIM LABS customers. For more informati
 For getting the *drivers* allowing the communication with the data acquisition card email us at info@flimlabs.com. 
 
 
+## Python Installation
+
+If you don't have Python 3.10.0 installed on your computer, you can follow the instructions in [Python install](/Python_install) folder
+
+
 ## How to get the API
 
 You can install flim_labs_api and the requested dependencies with the following *pip* command:
