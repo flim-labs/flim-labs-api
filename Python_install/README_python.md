@@ -4,9 +4,9 @@
 
 Before you begin, ensure that your system meets the following prerequisites:
 
-    * Operating System: Windows, macOS, or Linux
-    * Internet connection for downloading the Python installer (if not already downloaded)
-    * Sufficient disk space for the installation
+    - Operating System: Windows, macOS, or Linux
+    - Internet connection for downloading the Python installer (if not already downloaded)
+    - Sufficient disk space for the installation
 
 ## Check your Python version
 
@@ -47,7 +47,7 @@ Follow the steps below to install Python 3.10.0 on your system:
 		 
          * On the first installer page, ensure the option "Add Python 3.10 to PATH" is selected, as shown in figure:
 		 
-		  ![Python_setup](/images/Python_setup.svg "Add Python to PATH")
+		 ![Python_setup](/images/Python_setup.svg "Add Python to PATH")
 		 
          * Click "Customize installation" if you want to modify the installation settings, or click "Install Now" to proceed with the default settings.
 		 
