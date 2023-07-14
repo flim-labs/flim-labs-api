@@ -47,7 +47,7 @@ Follow the steps below to install Python 3.10.0 on your system:
 		 
 - On the first installer page, ensure the option "Add Python 3.10 to PATH" is selected, as shown in figure:
 		 
-![Python_setup](/images/Python_setup_1.png "Add Python to PATH")
+![Python_setup](/images/Python_setup_2.png "Add Python to PATH")
 		 
 - Click "Customize installation" if you want to modify the installation settings, or click "Install Now" to proceed with the default settings.
 		 
