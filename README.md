@@ -77,9 +77,9 @@ In the API the class <b>FlimLabsApi</b> is defined to provide an interface to co
 
 ## Examples 
 
-It is possible to find some examples here showing how to use *flim_labs_api* in all the acquisition modes.
+It is possible to find some examples of Graphical User Interfaces (GUIs) here showing how to use *flim_labs_api* in all the acquisition modes.
 
-1. [Single point spectroscopy using phasor analysis]
+1. [Single point spectroscopy using phasor analysis](/Single-point-spectroscopy-phasor-analysis)
 
 This GUI example is designed to perform single point time-correlated single photon counting (TCSPC) and phasor analysis on experimental data acquired in real-time.
 
@@ -106,8 +106,6 @@ This is how the GUI looks like and how it shows data during the experiments
 This is a GUI implementation of *flim_labs_api* for spectroscopy acquisition mode. You can use *spectroscopy.py* connecting with a SMA connector the single photon detector to channel 1 of the data acquisition card.
 
 With *spectroscopy.py* the laser period is divided in 256 time bins, and the single fluorescence photon events falling in each bin, recorded by a detector and time-tagged with tens/hundreds of picoseconds precision by the data acquisition card, are counted and passed to a 2D histogram to reconstruct the profile of the fluorescence lifetime decay curve.
-
-For instance, if the pulsed laser is set with a repetition frequency of 80 MHz, that corresponds to a laser period of 12.5 nanoseconds, then time bins of 0.048 nanoseconds (48 picoseconds) are created and the number of photons falling in each 48 picoseconds time bin will be passed to the histogram.
   
 For immediate reference, the code for *spectroscopy* GUI  is reported and commented in the folder [Spectroscopy](/Spectroscopy).
   
