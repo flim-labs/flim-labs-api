@@ -41,7 +41,7 @@ class MplCanvas(FigureCanvas):
 
 This class serves as the central hub for the graphical user interface (GUI) of the application, orchestrating the layout, components, and visualizations. Its functionalities can be detailed as follows:
 
-- Window Initialization: The MainWindow class initializes the main GUI window. It sets the window's dimensions, position, and title using the setGeometry and setWindowTitle methods. The window's structure is designed to accommodate various visual elements that facilitate fluorescence lifetime analysis. The GUI interface is ingeniously organized into three distinct layouts, each encompassing a dedicated canvas tailored for specific functions within the realm of fluorescence lifetime analysis:
+-  Window Initialization: The MainWindow class initializes the main GUI window. It sets the window's dimensions, position, and title using the setGeometry and setWindowTitle methods. The window's structure is designed to accommodate various visual elements that facilitate fluorescence lifetime analysis. The GUI interface is ingeniously organized into three distinct layouts, each encompassing a dedicated canvas tailored for specific functions within the realm of fluorescence lifetime analysis:
 
 1. Calibration and IRF Calculation Layout: The first canvas, aptly named "TCSPC calibration sample," furnishes a meticulously designed 2D plot. This plot is meticulously tailored to exhibit the Time-Correlated Single Photon Counting (TCSPC) histogram of a reference sample, serving as the cornerstone for calibration and the computation of the Instrument Response Function (IRF).
 
