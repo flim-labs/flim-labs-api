@@ -47,11 +47,11 @@ This class serves as the central hub for the graphical user interface (GUI) of t
 
  2. Global and Batched TCSPC Histogram Display Layout: Within the second layout, two separate 2D plots are thoughtfully embedded. One plot, entitled "Global decay histogram," presents a comprehensive visualization of the global TCSPC histogram. The second plot, named "Refreshed TCSPC data sample" focuses on illustrating the batched TCSPC histogram pertaining to an unknown sample. This layout collectively accentuates the temporal decay characteristics of fluorescent entities.
 
- 3. Phasor Transformation and Visualization Layout: The third layout encompasses two distinct 2D plots, bearing the titles "Global phasor plot" and "Refreshed phasor plot." These plots synergistically perform as canvases for the presentation of phasor coordinates. Through the ingenious application of phasor transformation to TCSPC data, these plots delineate the intricate relationships between global and batched TCSPC histograms.
+ 3. Phasor Transformation and Visualization Layout: The third layout encompasses two distinct 2D plots, bearing the titles "Global phasor plot" and "Refreshed phasor plot." These plots synergistically perform as canvases for the presentation of phasor coordinates. Through the application of phasor transformation to TCSPC data, these plots delineate the intricate relationships between global and batched TCSPC histograms.
 
 - Fluorescence Lifetime Decay Plot: The x-axis of the 2D plots, for both the one in the first layout and the ones in the central canvas, are meticulously aligned to correspond with the laser period measured in nanoseconds. This axis is discretized into 256 bins, capturing the temporal distribution of photon counts. On the y-axis, the bins are populated with photon counts, revealing the number of photons detected within each bin. This representation vividly illustrates the temporal delay between the emitted laser pulse and the photon detection, granting high-resolution insight into the fluorescence lifetime.
 
-- Laser Frequency and Acquisition Time Setting: Essential experimental parameters are preset, including the laser frequency (measured in MHz) and the duration of the data acquisition experiment (measured in seconds). Additionally, the spinbox named "Refresh time (seconds)" allows you to select the data batch size (in seconds) which is acquired and displayed in the "Refreshed decay histogram". These parameters can be adjusted by using spinboxes and controls in the GUI to suit the specific experimental requirements and conditions. If you want to measure the laser's frequency you can click on the button called "Sync Laser", and the results will be shown in a label below the button.
+- Laser Frequency and Acquisition Time Setting: Essential experimental parameters are preset, including the laser frequency (measured in MHz) and the duration of the data acquisition experiment (measured in seconds). Additionally, the spinbox named "Refresh time (seconds)" allows you to select the data batch size (in seconds) which is acquired and displayed in the "Refreshed TCSPC data sample" plot. These parameters can be adjusted by using spinboxes and controls in the GUI to suit the specific experimental requirements and conditions. If you want to measure the laser's frequency you can click on the button called "Sync Laser", and the results will be shown in a label below the button.
 
 - User Interaction Buttons: The GUI interface is augmented with intuitive interaction elements. The "Start" and "Stop" buttons enable users to initiate and halt the data acquisition process, respectively. This feature grants users control over data collection timing.
 
@@ -61,7 +61,7 @@ This class serves as the central hub for the graphical user interface (GUI) of t
 
 - Fluorescence Lifetime Display Labels: Labels are provided in the third layout to show the values of the (g,s) coordinates in the phasor plot and the resulting fluorescence lifetime calculated in nanoseconds. 
 
-- Real-Time Plot Refresh: A timer is established to facilitate real-time visualization updates. The plot is refreshed at intervals of 100 milliseconds, ensuring that users are kept informed of the evolving fluorescence decay curve.
+- Real-Time Plot Refresh: A timer is established to facilitate real-time visualization updates. The TCSPC histogram plots are refreshed at intervals of 100 milliseconds, ensuring that users are kept informed of the evolving fluorescence decay curve.
 
 ```
 class MainWindow(QMainWindow):
