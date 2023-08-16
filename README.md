@@ -79,15 +79,37 @@ In the API the class <b>FlimLabsApi</b> is defined to provide an interface to co
 
 It is possible to find some examples here showing how to use *flim_labs_api* in all the acquisition modes.
 
-1. [Spectroscopy](/Spectroscopy)
+1. [Single point spectroscopy using phasor analysis]
+
+This GUI example is designed to perform single point time-correlated single photon counting (TCSPC) and phasor analysis on experimental data acquired in real-time.
+
+The GUI is designed for working with a single channel and for using it you have to connect, with a SMA connector, the output of the single photon detector to channel 1 of the data acquisition card.
+
+This GUI offers a complete pipeline for single point fluorescence lifetime analysis, starting from the calibration on a reference fluorophore for then analyzing the fluorescence lifetime decay of unknown samples using the TCSPC histogram and the phasor plot.
+
+The TCSPC histogram is obtained by dividing the laser period in 256 time bins  and the single fluorescence photon events falling in each bin, recorded by a detector and time-tagged with tens/hundreds of picoseconds precision by the data acquisition card, are counted and passed to a 2D histogram to reconstruct the profile of the fluorescence lifetime decay curve.
+
+For instance, if the pulsed laser is set with a repetition frequency of 80 MHz, that corresponds to a laser period of 12.5 nanoseconds, then time bins of 0.048 nanoseconds (48 picoseconds) are created and the number of photons falling in each 48 picoseconds time bin will be passed to the histogram.
+
+The phasor analysis is performed in real-time applying a cosine and sine transformation to the TCSPC data, in order to associate to a TCSPC decay histogram a point of coordinates  G (cosine component) and S (sine component) in the phasor space.
+
+The GUI allows to perform both phasor analysis on a single batch of data, applying the phasor transformation to the entire data acquired, or on different batches, whose number can be obtained by dividing the total acquisition time of the experiment for a given number decided by the experimenters. In this way it is possible to get both a single point in the phasor plot at the end of the acquisition or a cloud of points corresponding to different batches of TCSPC data.
+
+For immediate reference, the code used for designing this GUI is reported and commented in the folder [Single-point-spectroscopy-phasor-analysis](/Single-point-spectroscopy-phasor-analysis) 
+
+This is how the GUI looks like and how it shows data during the experiments
+
+![Phasor analysis](/images/phasor_plot.png "Photons_tracing")
+
+2. [Spectroscopy](/Spectroscopy)
   
-This is an implementation of *flim_labs_api* for spectroscopy acquisition mode. You can use *spectroscopy.py* connecting with a SMA connector the single photon detector to channel 1 of the data acquisition card.
+This is a GUI implementation of *flim_labs_api* for spectroscopy acquisition mode. You can use *spectroscopy.py* connecting with a SMA connector the single photon detector to channel 1 of the data acquisition card.
 
 With *spectroscopy.py* the laser period is divided in 256 time bins, and the single fluorescence photon events falling in each bin, recorded by a detector and time-tagged with tens/hundreds of picoseconds precision by the data acquisition card, are counted and passed to a 2D histogram to reconstruct the profile of the fluorescence lifetime decay curve.
 
 For instance, if the pulsed laser is set with a repetition frequency of 80 MHz, that corresponds to a laser period of 12.5 nanoseconds, then time bins of 0.048 nanoseconds (48 picoseconds) are created and the number of photons falling in each 48 picoseconds time bin will be passed to the histogram.
   
-For immediate reference, the code for *spectroscopy* use of the API  is reported and commented in the folder [Spectroscopy](/Spectroscopy).
+For immediate reference, the code for *spectroscopy* GUI  is reported and commented in the folder [Spectroscopy](/Spectroscopy).
   
 This is an example of what is obtained using *spectroscopy.py* to reconstruct the fluorescence lifetime decay curve of a coumarin sample (1,5 micrograms/ml):
  
@@ -96,22 +118,22 @@ This is an example of what is obtained using *spectroscopy.py* to reconstruct th
 The data are also saved as binary files for further visualization and processing.
  
   
-2. [Measure frequency](/Measure_frequency)
+3. [Measure frequency](/Measure_frequency)
 
-This is an implementation of flim_labs_api for the measure_frequency acquisition mode. It measures the frequency of the laser pulses from the channel *sync in* of the FPGA.
+This is a GUI implementation of *flim_labs_api* for the measure_frequency acquisition mode. It measures the frequency of the laser pulses from the channel *sync in* of the FPGA.
 
 Using *measure-frequency.py* code it is possible to achieve a precision of tens/hundreds of Hz for laser's frequencies of tens of MHz. 
  
-The code for the *measure-frequency* use of the API, for immediate reference, is reported and commented in the folder [Measure frequency](/Measure_frequency).
+The code for the *measure-frequency* GUI, for immediate reference, is reported and commented in the folder [Measure frequency](/Measure_frequency).
  
 This is an example of what is obtained to measure a pulsed laser's frequency of 80 MHz:
 
 ![80 MHz laser's frequency measurement](/images/frequency-meter_1.png "Frequency meter")
   
 
-3. [Photons_tracing](/Photons_tracing)
+4. [Photons_tracing](/Photons_tracing)
 
-This is an example of using flim_labs_api for acquiring and displaying photons tracing data. You can acquire the data from all the 12 channels of the FPGA in this example.
+This is a GUI example of using *flim_labs_api* for acquiring and displaying photons tracing data. You can acquire the data from all the 12 channels of the FPGA in this example.
  
 The map of the data acquisition card's channels for the *photons_tracing* acquisition mode is the following: 
 
@@ -130,7 +152,7 @@ The map of the data acquisition card's channels for the *photons_tracing* acquis
 | ref3 | ch10 |
 | sync in | ch9 |
 
-The code for the *photons_tracing* use of the API is reported and commented in the folder [Photons_tracing](/Photons_tracing) for immediate reference.
+The code for the *photons_tracing* GUI is reported and commented in the folder [Photons_tracing](/Photons_tracing) for immediate reference.
 
 This is an example of what is obtained using *photons_tracing.py* to check the intensity of fluorescence photons in 100 microseconds time bins for a coumarin sample (1,5 micrograms/ml):
  
@@ -139,23 +161,21 @@ This is an example of what is obtained using *photons_tracing.py* to check the i
 The data are also saved as binary files for further visualization and processing.
 
 
-4. [Acquire_raw_data](/Acquire_raw_data)
+5. [Acquire_raw_data](/Acquire_raw_data)
 
-This is an example of using flim_labs_api to acquire the data coming from the FPGA without processing and save them as .bin file.
+This is an example of using *flim_labs_api* to acquire the data coming from the FPGA without processing and save them as .bin file.
 You just have to flash the firmware for the acquisition mode you're interested in and specify the size in MB of the data you want to acquire.
 
 The code for the *acquire_raw_data* use of the API is reported and commented in the folder [Acquire_raw_data](/Acquire_raw_data) for immediate reference.
 
 
-5. [Dumping data from binary files](/Dumping_from_binary_files)
+6. [Dumping data from binary files](/Dumping_from_binary_files)
 
 This example allows you to select a binary file saved after a [Spectroscopy](/Spectroscopy/spectroscopy.py) acquisition in order to read the binary data containing information regarding the [microtime and macrotime](/images/mic-mac.jpg "parameters") of the acquired photons and store the extracted values in 1D arrays for further processing and visualization.
 
 For instance, you can create a histogram plot directly from the extracted *micro_time* values of the photons.
 
 The code used for dumping the binary data from a *spectroscopy* output file and process them is contained in the folder [Dumping_from_binary_files](/Dumping_from_binary_files) for immediate reference.  
-
-
 
 
 

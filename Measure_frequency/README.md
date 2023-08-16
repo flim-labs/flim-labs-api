@@ -1,6 +1,6 @@
 # Measure frequency
 
-Here you can find the commented code used in [measure-frequency](/Measure_frequency/measure-frequency.py) example
+Here you can find the commented code used in [measure-frequency](/Measure_frequency/measure-frequency.py) GUI
 
 ##### Needed libraries
  

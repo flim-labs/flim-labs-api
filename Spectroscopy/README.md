@@ -1,6 +1,6 @@
 # Spectroscopy
 
-Here you can find the commented code used in [Spectroscopy](/Spectroscopy/spectroscopy.py) example. In the file [Spectroscopy_post_processing.ipynb](/Spectroscopy/Spectroscopy_post_processing.ipynb) contained in this folder you can find some examples of how to process spectroscopy data saved from the experiment to extract additional information and parameters.
+Here you can find the commented code used in [Spectroscopy](/Spectroscopy/spectroscopy.py) GUI. In the file [Spectroscopy_post_processing.ipynb](/Spectroscopy/Spectroscopy_post_processing.ipynb) contained in this folder you can find some examples of how to process spectroscopy data saved from the experiment to extract additional information and parameters.
  
 
 ##### Needed libraries
