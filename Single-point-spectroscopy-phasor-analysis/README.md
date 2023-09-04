@@ -664,7 +664,7 @@ def save_and_reset_data(self):
 This method saves in a excel file the (g,s) coordinates, and the corresponding modulus and phase parameters in the phasor plot, for each batch of TCSPC data acquired and displayed in the "Refreshed TCSPC data sample" plot.
 
 ```
-    def save_to_excel(self):
+def save_to_excel(self):
         
             
         data = {
@@ -690,3 +690,5 @@ if __name__ == '__main__':
     window = MainWindow()
     window.show()
     sys.exit(app.exec_())
+	
+```
