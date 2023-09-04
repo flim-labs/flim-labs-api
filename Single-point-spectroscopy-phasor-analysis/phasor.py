@@ -1,6 +1,7 @@
 import sys
 import math
 import matplotlib
+import pandas as pd
 import matplotlib.pyplot as plt
 from PyQt5.QtCore import QTimer, QMutex, Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QSpinBox, QFileDialog, QSplitter, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout,QDoubleSpinBox
@@ -38,7 +39,7 @@ class MainWindow(QMainWindow):
         self.tau_modulation_reference = 4 
         self.k = 1 / (2*np.pi*self.harmonic_value*self.laser_mhz*1e6)
         self.m = np.sqrt(1 / (1 + ((self.tau_modulation_reference*1e-9/self.k)**2)))    
-        self.phi = math.atan2(self.tau_phase_reference*1e-9,self.k)
+        self.phi = math.atan2(self.tau_modulation_reference*1e-9,self.k)
         
                 
         self.y_data_ref = np.ones(256)        
@@ -83,6 +84,17 @@ class MainWindow(QMainWindow):
         self.g_data_referenced_list = []
         self.s_data_referenced_list = []
         
+        # Initialize lists to store acquired data
+        #self.x_data_list = []
+        #self.y_data_list = []
+        self.g_data_excel_list = []
+        self.s_data_excel_list = []
+        self.m_fluo_list = []
+        self.phi_fluo_list = []
+        
+        #initialize the counter for the batches of data in canvas2.ax2
+        self.batch_counter = 0
+
         
 
 
@@ -160,11 +172,12 @@ class MainWindow(QMainWindow):
         self.start_button_data.move(5, 330)
         self.start_button_data.clicked.connect(self.start_acquisition)
         
+        
         # draw a button to stop the acquisition in data
         self.stop_button_data = QPushButton('Stop', self)
         self.stop_button_data.move(120, 330)
         self.stop_button_data.clicked.connect(self.stop_acquisition)
-        
+        self.stop_button_data.clicked.connect(self.save_to_excel)
         self.mutex = QMutex()
         
         
@@ -365,8 +378,8 @@ class MainWindow(QMainWindow):
         self.show()
         
     def closeEvent(self, event):
-        np.savez_compressed('Phasor_analysis', self.x_data, self.y_data_ref)
-        np.savez_compressed('Phasor_analysis_data', self.x_data, self.y_data)
+        np.savetxt('Reference_TCSPC.txt', np.vstack((self.x_data, self.y_data_ref)).T)
+        np.savetxt('Data_TCSPC.txt', np.vstack((self.x_data, self.y_data)).T)
         self.api.stop_acquisition()
         event.accept()
         
@@ -387,6 +400,9 @@ class MainWindow(QMainWindow):
         
     def set_refresh_time_in_seconds(self, value):
         self.refresh_time_seconds = value
+        self.canvas2.ax2.set_title(f'{self.refresh_time_seconds} seconds TCSPC data sample')
+        self.canvas3.ax2.set_title(f'{self.refresh_time_seconds} seconds Refreshed phasor plot')
+
         
     
     def set_harmonic_value(self, value):
@@ -462,6 +478,9 @@ class MainWindow(QMainWindow):
             self.points_received += 1
             self.mutex.unlock()   
             
+            #self.x_data_list.append(self.x_data)
+            #self.y_data_list.append(self.y_data)    
+            
     def frequency_meter(self):
         self.api.set_consumer_handler(self.receive_measure)
         self.measure_label.setText('Waiting for measure...')
@@ -524,7 +543,7 @@ class MainWindow(QMainWindow):
         self.canvas2.ax2.clear()
         self.canvas2.ax2.plot(self.x_data, self.y_data_upd)
         self.canvas2.ax2.set_xlim([0, 1000 / self.laser_mhz])
-        self.canvas2.ax2.set_title('Refreshed decay histogram')
+        self.canvas2.ax2.set_title(f'{self.refresh_time_seconds} seconds TCSPC data sample')
         self.canvas2.ax2.set_xlabel('Time (ns)')
         self.canvas2.ax2.set_ylabel('Counts')
         self.canvas2.draw_idle()
@@ -542,9 +561,20 @@ class MainWindow(QMainWindow):
         g_data_referenced = m_fluo*np.cos(phi_fluo) 
         s_data_referenced = m_fluo*np.sin(phi_fluo)  
         
+        if self.acquiring_data:
+           self.g_data_excel_list.append(g_data_referenced)
+           self.s_data_excel_list.append(s_data_referenced)
+           self.m_fluo_list.append(m_fluo)
+           self.phi_fluo_list.append(phi_fluo)
+              
+        #print(len(self.g_data_excel_list)) 
+        #print(len(self.s_data_excel_list))     
+        #print(len(self.m_fluo_list)) 
+        #print(len(self.m_fluo_list))         
+        
         S_1 = np.sum(self.y_data * self.sine_reference) / np.sum(self.y_data)
         G_1 = np.sum(self.y_data * self.cosine_reference) / np.sum(self.y_data)
-        m_data_1 = np.sqrt(G_1**2+S_1**2) 
+        m_data_1 = np.sqrt(G_1**2 + S_1**2) 
         phi_data_1 = np.arctan2(S_1,G_1) 
          
         m_fluo_1 = m_data_1 / self.m_instr  
@@ -588,7 +618,7 @@ class MainWindow(QMainWindow):
         self.canvas3.ax2.set_xlim([-0.005, 1.2])
         self.canvas3.ax2.set_ylim([0, 0.6])
         self.canvas3.ax2.plot(self.g_data_referenced_list, self.s_data_referenced_list, 'bo')
-        self.canvas3.ax2.set_title('Refreshed phasor plot')
+        self.canvas3.ax2.set_title(f'{self.refresh_time_seconds} seconds Refreshed phasor plot')
         self.canvas3.ax2.set_xlabel('g')
         self.canvas3.ax2.set_ylabel('s')
         self.canvas3.ax2.contour(self.X, self.Y, self.F, [0], colors='b', linewidths=3)
@@ -603,7 +633,9 @@ class MainWindow(QMainWindow):
         
     
     def save_and_reset_data(self):
-        np.savetxt('data.txt', np.vstack((self.x_data, self.y_data_upd)).T)
+        filename = f'data_batch_{self.batch_counter}.txt'
+        np.savetxt(filename, np.vstack((self.x_data, self.y_data_upd)).T)
+        self.batch_counter += 1
         self.y_data_upd = np.zeros_like(self.y_data_upd)  #qui è la chiave del problema   
         self.canvas2.ax2.clear()
         self.canvas2.ax2.plot(self.x_data, self.y_data_upd)
@@ -611,7 +643,34 @@ class MainWindow(QMainWindow):
         self.canvas2.ax2.set_xlabel('Time (ns)')
         self.canvas2.ax2.set_ylabel('Counts')
         self.canvas2.draw_idle()
-        QTimer.singleShot(self.refresh_time_seconds * 1000, self.update_canvas2) #prova a moltiplicare refreshed_time per 1000
+        #QTimer.singleShot(self.refresh_time_seconds * 1000, self.update_canvas2) #prova a moltiplicare refreshed_time per 1000
+        
+    def save_to_excel(self):
+        #for _ in range(len(self.x_data_list) - len(self.g_data_excel_list)):
+           
+         #   self.g_data_excel_list.append(0)
+          #  self.s_data_excel_list.append(0)
+           # self.m_fluo_list.append(0)
+            #self.phi_fluo_list.append(0)
+        data = {
+            #'time bin': self.x_data_list,
+            #'photon count': self.y_data_list,
+            'g_data': self.g_data_excel_list,
+            's_data': self.s_data_excel_list,
+            'm_fluo': self.m_fluo_list,
+            'phi_fluo': self.phi_fluo_list
+        }
+        
+        #data_1 = {
+        
+         #   'time bin': self.x_data_list,
+          #  'photon count': self.y_data_list
+        #}
+
+        df = pd.DataFrame(data)
+        #df_1 = pd.DataFrame(data_1)
+        df.to_excel('phasors_data.xlsx', index=False)    
+        #df_1.to_excel('TCSPC_data.xlsx', index=False)
         
     
                 

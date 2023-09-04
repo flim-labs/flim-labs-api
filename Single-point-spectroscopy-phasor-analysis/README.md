@@ -114,6 +114,15 @@ class MainWindow(QMainWindow):
         #list for g and s points to be plotted all together in canvas3.ax2
         self.g_data_referenced_list = []
         self.s_data_referenced_list = []
+		
+		# Initialize lists to store acquired data
+		self.g_data_excel_list = []
+        self.s_data_excel_list = []
+        self.m_fluo_list = []
+        self.phi_fluo_list = []
+		
+		#initialize the counter for the batches of data in canvas2.ax2
+        self.batch_counter = 0
         
         
         # Create three MplCanvas objects
@@ -532,7 +541,7 @@ def refresh_histogram(self):
 
 5. *update_canvas2* : 
 
-This method is connected to a timer that calls it with a regular interval decided with a dedicated control widget in the GUI. The method is responsible for updating the batched TCSPC histogram in the right plot of the second layout with new data and calculating the (g,s) coordinates resulting from the phasor transformation of the TCSPC data, together with the associated modulus and phase. Each time the *update_canvas2* method is called, a (g,s) point is calculated and showed in the phasor plot in the right part of the third canva, to give the users a graphical and real-time hint on the fluorescence lifetime for the considered batch of data. 
+This method is connected to a timer that calls it with a regular interval decided with a dedicated control widget in the GUI. The method is responsible for updating the batched TCSPC histogram in the right plot of the second layout with new data and calculating the (g,s) coordinates resulting from the phasor transformation of the TCSPC data, together with the associated modulus and phase in the phasor plot. Each time the *update_canvas2* method is called, a (g,s) point is calculated and showed in the phasor plot in the right part of the third canva, to give the users a graphical and real-time hint on the fluorescence lifetime for the considered batch of data. 
 
 ```
 
@@ -558,6 +567,14 @@ def update_canvas2(self):
         phi_fluo = phi_data - self.phi_instr
         g_data_referenced = m_fluo*np.cos(phi_fluo) 
         s_data_referenced = m_fluo*np.sin(phi_fluo)  
+		
+		
+		#append in a list all the (g,s) coordinates and (m,phi) values obtained from the different batches of data
+		if self.acquiring_data:
+           self.g_data_excel_list.append(g_data_referenced)
+           self.s_data_excel_list.append(s_data_referenced)
+           self.m_fluo_list.append(m_fluo)
+           self.phi_fluo_list.append(phi_fluo)
         
         S_1 = np.sum(self.y_data * self.sine_reference) / np.sum(self.y_data)
         G_1 = np.sum(self.y_data * self.cosine_reference) / np.sum(self.y_data)
@@ -589,7 +606,7 @@ def update_canvas2(self):
            self.g_data_referenced_list.append(g_data_referenced)
            self.s_data_referenced_list.append(s_data_referenced)
         
-        # Update the phasor plot di sinistra (un solo punto)
+        # Update the left side phasor plot 
         self.canvas3.ax1.clear()
         self.canvas3.ax1.set_xlim([-0.005,1.2])
         self.canvas3.ax1.set_ylim([0, 0.6])
@@ -599,8 +616,8 @@ def update_canvas2(self):
         self.canvas3.ax1.set_xlabel('g')
         self.canvas3.ax1.set_ylabel('s')
         self.canvas3.ax1.contour(self.X_2,self.Y_2,self.F_2,[0],colors='b',linewidths=3)
-        # Update the phasor plot di destra
         
+		# Update the right side phasor plot 
         self.canvas3.ax2.clear()
         self.canvas3.ax2.set_xlim([-0.005, 1.2])
         self.canvas3.ax2.set_ylim([0, 0.6])
@@ -622,13 +639,15 @@ def update_canvas2(self):
 
 6. *save_and_reset_data* :
 
-This method saves in a text file the batches of TCSPC data acquired and displayed in the "Refreshed TCSPC data sample" plot. Afterwards, the array storing updated photon counts (y_data_upd) is reset to all zeros. This prepares the array for receiving new photon count data in the upcoming acquisition cycle. The refreshed TCSPC histogram on the second layout is updated. The existing plot data is cleared, and the newly reset y_data_upd is plotted against the corresponding time values. The plot's title, x-axis label, and y-axis label are adjusted. Finally a timer (QTimer.singleShot) is set to trigger the update_canvas2 method after a specific time interval (refresh_time_seconds).
+This method saves in a text file the batches of TCSPC data acquired and displayed in the "Refreshed TCSPC data sample" plot. Afterwards, the array storing updated photon counts (y_data_upd) is reset to all zeros. This prepares the array for receiving new photon count data in the upcoming acquisition cycle. The refreshed TCSPC histogram on the second layout is updated. The existing plot data is cleared, and the newly reset y_data_upd is plotted against the corresponding time values. The plot's title, x-axis label, and y-axis label are adjusted. This method is called every time a QTimer defined in *update_canvas2* counts a number of seconds corresponding to the ones defined in *Refresh Time (Seconds)* spinbox.
 
 
 ```
 
 def save_and_reset_data(self):
-        np.savetxt('data.txt', np.vstack((self.x_data, self.y_data_upd)).T)
+        filename = f'data_batch_{self.batch_counter}.txt'
+        np.savetxt(filename, np.vstack((self.x_data, self.y_data_upd)).T)
+        self.batch_counter += 1
         self.y_data_upd = np.zeros_like(self.y_data_upd)  
         self.canvas2.ax2.clear()
         self.canvas2.ax2.plot(self.x_data, self.y_data_upd)
@@ -636,6 +655,38 @@ def save_and_reset_data(self):
         self.canvas2.ax2.set_xlabel('Time (ns)')
         self.canvas2.ax2.set_ylabel('Counts')
         self.canvas2.draw_idle()
-        QTimer.singleShot(self.refresh_time_seconds * 1000, self.update_canvas2) 
+       
 
 ```
+
+7. *save_to_excel* :
+
+This method saves in a excel file the (g,s) coordinates, and the corresponding modulus and phase parameters in the phasor plot, for each batch of TCSPC data acquired and displayed in the "Refreshed TCSPC data sample" plot.
+
+```
+    def save_to_excel(self):
+        
+            
+        data = {
+            'g_data': self.g_data_excel_list,
+            's_data': self.s_data_excel_list,
+            'm_fluo': self.m_fluo_list,
+            'phi_fluo': self.phi_fluo_list
+        }
+        
+        
+
+        df = pd.DataFrame(data)
+      
+        df.to_excel('phasors_data.xlsx', index=False)    
+        
+
+
+        
+        
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec_())
